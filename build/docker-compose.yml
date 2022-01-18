@@ -1,0 +1,30 @@
+version: '3'
+services:
+  gatsbyclass:
+    build:
+      context: ../
+      dockerfile: ./build/Dockerfile
+    ports:
+      - '3500:8000'
+      - '3501:9929'
+      - '3502:9230'
+      - '3503:3503'
+    volumes:
+      - ../:/srv
+      - gatsbyclass_modules:/srv/app/node_modules
+      - $HOME/.ssh:/home/coderunner/.ssh
+    environment:
+      - ARCH=arm64
+      - NODE_ENV=development
+      - GATSBY_WEBPACK_PUBLICPATH=/
+      - PORT=8000
+      - INTERNAL_STATUS_PORT=3503
+    command: tail -f /dev/null
+    networks:
+      - gatsbyclass-network
+    container_name: 'gatsbyclass'
+networks:
+  gatsbyclass-network:
+    name: gatsbyclass-network
+volumes:
+  gatsbyclass_modules:

@@ -1,0 +1,25 @@
+#### Notice the -p flag.  That is prevent docker from complaining about orphan containers.
+# docker-compose -f build/docker-compose-release.yml -p neil-release build --build-arg CACHEBUST=$(date +%s)
+# docker-compose -f build/docker-compose-release.yml -p neil-release up -d
+#### if you need to completely rebuild then run
+# docker-compose -f build/docker-compose-release.yml -p neil-release build  --no-cache
+# docker-compose -f build/docker-compose-release.yml -p neil-release up -d
+#### To bring down
+# docker-compose -f build/docker-compose-release.yml -p atyeti-site down
+#### END
+version: "3"
+services:
+  gatsbyclass_release:
+    build:
+      context: ../
+      dockerfile: ./build/Dockerfile.release
+    ports:
+      - 3555:8888
+    environment:
+      - GATSBY_WEBPACK_PUBLICPATH=/
+    networks:
+      - gatsbyclass-release-network
+    container_name: "gatsbyclass-release"
+networks:
+  gatsbyclass-release-network:
+    name: gatsbyclass-release-network

@@ -1,0 +1,8 @@
+{
+  "name": "Gatsby Class",
+  "dockerComposeFile": ["../build/docker-compose.yml"],
+  "service": "gatsbyclass",
+  "workspaceFolder": "/srv",
+  "settings": {},
+  "extensions": ["esbenp.prettier-vscode", "dbaeumer.vscode-eslint"]
+}

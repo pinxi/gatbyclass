@@ -1,0 +1,26 @@
+#DOCKER_BUILDKIT=1 docker build --file build/Dockerfile.package --output app .
+FROM node:16-buster AS stage1
+
+ENV LIBVIPS_VERSION=8.11.4
+
+RUN apt-get -y update && \
+    apt-get -y --no-install-recommends install wget make g++ build-essential libtool libimagequant0 libimagequant-dev libgif-dev && \
+    cd /tmp && \
+    wget "https://github.com/libvips/libvips/releases/download/v${LIBVIPS_VERSION}/vips-${LIBVIPS_VERSION}.tar.gz" && \
+    tar xf "vips-${LIBVIPS_VERSION}.tar.gz" && \
+    cd "vips-${LIBVIPS_VERSION}" && \
+    ./configure && \
+    make install && \
+    ldconfig /usr/local/lib && \
+    apt-get -y --purge autoremove && \
+    apt-get -y clean && \
+    rm -rf /usr/share/doc /usr/share/man /var/lib/apt/lists/* /root/* /tmp/* /var/tmp/*
+
+WORKDIR /srv/app
+COPY ./app/package.json .
+RUN npm install --package-lock-only; yarn import
+RUN yarn upgrade --latest
+
+FROM scratch AS export-stage
+COPY --from=stage1 /srv/app/package.json .
+COPY --from=stage1 /srv/app/yarn.lock .
