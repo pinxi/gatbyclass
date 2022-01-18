@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:impish-20211015
 # Build from base OS that matches Netlify image.  Was using node:16-buster.
 # troubleshoot using DOCKER_BUILDKIT=0 docker build .
 
