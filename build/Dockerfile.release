@@ -79,6 +79,6 @@ ADD ./app/ ./
 RUN rm -rf .cache public
 RUN gatsby build
 
-FROM nginx
+FROM nginx:stable
 EXPOSE 80 8080
 COPY --from=builder /srv/app/public /usr/share/nginx/html
